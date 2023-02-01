@@ -65,6 +65,7 @@ public class ChatScreen : MonoBehaviour, IScreenElement
 
     public void EndDialog()
     {
+        Clear();
         OnComplete?.Invoke();
     }
 
@@ -99,7 +100,9 @@ public class ChatScreen : MonoBehaviour, IScreenElement
 
     private void HandleChatPosition()
     {
-        if (linesParent.rect.height - 1 > rectTransform.rect.height)
+        float targetYPosition = linesParent.rect.height - rectTransform.rect.height;
+
+        if (targetYPosition - 1 > linesParent.anchoredPosition.y && linesParent.rect.height > rectTransform.rect.height)
         {
             linesParent.anchoredPosition = Vector2.Lerp(
                 linesParent.anchoredPosition,
@@ -111,5 +114,14 @@ public class ChatScreen : MonoBehaviour, IScreenElement
     private void Update()
     {
         HandleChatPosition();
+    }
+
+    private void Clear()
+    {
+        Transform[] lines = linesParent.GetComponentsInChildren<Transform>();
+        foreach (var line in lines)
+        {
+            if (line != linesParent) Destroy(line.gameObject);
+        }
     }
 }
