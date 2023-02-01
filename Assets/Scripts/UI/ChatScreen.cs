@@ -99,7 +99,7 @@ public class ChatScreen : MonoBehaviour, IScreenElement
 
     private void HandleChatPosition()
     {
-        if (linesParent.rect.height > rectTransform.rect.height)
+        if (linesParent.rect.height - 1 > rectTransform.rect.height)
         {
             linesParent.anchoredPosition = Vector2.Lerp(
                 linesParent.anchoredPosition,
