@@ -58,6 +58,7 @@ public class ChatScreen : MonoBehaviour, IScreenElement
         currentLineIndex = -1;
         lastCharacter = null;
         isCurrentSideLeft = dialogData.IsFirstSideLeft;
+        linesParent.anchoredPosition = new Vector2(linesParent.anchoredPosition.x, 0);
         this.OnComplete = OnComplete;
 
         ShowNextLine();
