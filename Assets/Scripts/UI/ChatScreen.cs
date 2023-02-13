@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class ChatScreen : MonoBehaviour, IScreenElement
 {
-    [SerializeField] private GameObject characterLinePrefab;
+    [SerializeField] private CharacterLine characterLinePrefab;
     [SerializeField] private RectTransform linesParent;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private float scrollSpeed;
-
-    private Tweener alphaTweener;
 
     private int currentLineIndex = 0;
     private Character lastCharacter;
@@ -20,15 +18,22 @@ public class ChatScreen : MonoBehaviour, IScreenElement
 
     private RectTransform rectTransform;
 
+    private bool isDialogProcess = false;
+
     private void Awake()
     {
         rectTransform = transform as RectTransform;
     }
 
+    private void OnDestroy()
+    {
+        DOTween.Kill(this);
+    }
+
     public void Show(bool immediately = false)
     {
         gameObject.SetActive(true);
-        alphaTweener?.Kill();
+        DOTween.Kill(this);
 
         if (immediately)
         {
@@ -36,24 +41,33 @@ public class ChatScreen : MonoBehaviour, IScreenElement
         }
         else
         {
-            alphaTweener = canvasGroup.DOFade(1, 0.4f);
+            canvasGroup.DOFade(1, 0.4f)
+                .SetUpdate(true)
+                .SetId(this);
         }      
     }
 
     public void Hide(bool immediately = false)
     {
+        DOTween.Kill(this);
+
         if (immediately)
         {
             gameObject.SetActive(false);
         }
         else
         {
-            alphaTweener = canvasGroup.DOFade(0, 0.4f).OnComplete(() => gameObject.SetActive(false));
+            canvasGroup.DOFade(0, 0.4f)
+                .SetUpdate(true)
+                .SetId(this)
+                .OnComplete(() => gameObject.SetActive(false));
         }
     }
 
     public void StartDialog(DialogData dialogData, Action OnComplete = null)
     {
+        isDialogProcess = true;
+
         currentDialogData = dialogData;
         currentLineIndex = -1;
         lastCharacter = null;
@@ -66,8 +80,11 @@ public class ChatScreen : MonoBehaviour, IScreenElement
 
     public void EndDialog()
     {
+        if (!isDialogProcess) return;
+
         Clear();
         OnComplete?.Invoke();
+        isDialogProcess = false;
     }
 
     public void ShowNextLine()
@@ -93,7 +110,7 @@ public class ChatScreen : MonoBehaviour, IScreenElement
 
     private void CreateLine(DialogData.Line line)
     {
-        CharacterLine characterLine = Instantiate(characterLinePrefab, linesParent).GetComponent<CharacterLine>();
+        CharacterLine characterLine = Instantiate(characterLinePrefab, linesParent);
         characterLine.SetText(line.message);
         characterLine.SetIcon(line.character.ChatIcon);
         characterLine.Show(isCurrentSideLeft);
