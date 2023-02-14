@@ -6,7 +6,7 @@ SpriteAtlas:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Sprite Atlas
+  m_Name: SA_ChatUI
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -60,5 +60,5 @@ SpriteAtlas:
   - SoftQuad
   - CharacterIcon
   m_RenderDataMap: {}
-  m_Tag: New Sprite Atlas
+  m_Tag: SA_ChatUI
   m_IsVariant: 0

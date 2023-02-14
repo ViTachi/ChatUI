@@ -7,12 +7,9 @@ public class TMPToCustomFontConverter : MonoBehaviour
     [SerializeField] private TMPro.TMP_FontAsset tmpFontAsset;
     [SerializeField] private Vector2 textureSize;
 
-    [SerializeField] private List<CharacterInfo> characterInfos = new List<CharacterInfo>();
-
-
     public void Convert()
     {
-        characterInfos.Clear();
+        List<CharacterInfo> characterInfos = new List<CharacterInfo>();
 
         for (int i = 0; i < tmpFontAsset.characterTable.Count; i++)
         {
@@ -45,6 +42,6 @@ public class TMPToCustomFontConverter : MonoBehaviour
 
         customFont.characterInfo = characterInfos.ToArray();
 
-        Debug.Log("Convert complete!");
+        Debug.Log("Convertion complete!");
     }
 }
